@@ -348,20 +348,20 @@ func Or(inner ...FilterQuery) FilterQuery {
 // Not wraps filters using not.
 // It'll negate the filter type if possible.
 func Not(inner ...FilterQuery) FilterQuery {
-	if len(inner) > 0 {
+	if len(inner) == 1 {
 		fq := inner[0]
 		switch fq.Type {
 		case FilterEqOp:
 			fq.Type = FilterNeOp
 			return fq
 		case FilterLtOp:
-			fq.Type = FilterGtOp
+			fq.Type = FilterGteOp
 		case FilterLteOp:
 			fq.Type = FilterGtOp
 		case FilterGtOp:
 			fq.Type = FilterLteOp
 		case FilterGteOp:
-			fq.Type = FilterLteOp
+			fq.Type = FilterLtOp
 		case FilterNilOp:
 			fq.Type = FilterNotNilOp
 		case FilterInOp:
