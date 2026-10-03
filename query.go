@@ -98,10 +98,10 @@ func (q Query) Build(query *Query) {
 			query.SelectQuery = q.SelectQuery
 		}
 
-		query.JoinQuery = append(q.JoinQuery, query.JoinQuery...)
+		query.JoinQuery = append(query.JoinQuery, q.JoinQuery...)
 
 		if !q.WhereQuery.None() {
-			query.WhereQuery = q.WhereQuery.And(query.WhereQuery)
+			query.WhereQuery = query.WhereQuery.And(q.WhereQuery)
 		}
 
 		if q.GroupQuery.Fields != nil {
@@ -114,7 +114,7 @@ func (q Query) Build(query *Query) {
 			query.OffsetQuery = q.OffsetQuery
 		}
 
-		if q.LimitQuery >= 0 {
+		if q.LimitQuery != 0 {
 			query.LimitQuery = q.LimitQuery
 		}
 
@@ -123,7 +123,7 @@ func (q Query) Build(query *Query) {
 		}
 
 		query.ReloadQuery = query.ReloadQuery || q.ReloadQuery
-		query.CascadeQuery = query.CascadeQuery && q.CascadeQuery
+		query.CascadeQuery = query.CascadeQuery || q.CascadeQuery
 		query.UsePrimaryDb = query.UsePrimaryDb || q.UsePrimaryDb
 	}
 }
