@@ -676,7 +676,7 @@ func (r repository) saveHasMany(cw contextWrapper, doc *Document, mutation *Muta
 			assocMuts, changed = mutation.Assoc[field]
 		)
 
-		if !assoc.Autosave() && !changed {
+		if !assoc.Autosave() || !changed {
 			continue
 		}
 
@@ -705,7 +705,7 @@ func (r repository) saveHasMany(cw contextWrapper, doc *Document, mutation *Muta
 					return err
 				}
 			} else if len(deletedIDs) > 0 {
-				filter.AndIn(col.PrimaryField(), deletedIDs...)
+				filter = filter.AndIn(col.PrimaryField(), deletedIDs...)
 				if _, err := r.deleteAny(cw, col.meta.flag, Build(table, filter).Populate(col.Meta())); err != nil {
 					return err
 				}
@@ -735,7 +735,7 @@ func (r repository) saveHasMany(cw contextWrapper, doc *Document, mutation *Muta
 					}
 				}
 
-				if updateCount > i {
+				if updateCount < i {
 					col.Swap(updateCount, i)
 					muts[i], muts[updateCount] = muts[updateCount], muts[i]
 				}
