@@ -146,16 +146,16 @@ func applyMaps(maps []Map, assoc Association) ([]Mutation, []any) {
 	}
 
 	// delete stales
-	if curr < col.Len()-1 {
+	if curr < col.Len() {
 		deletedIDs = pValues[curr:]
 		col.Truncate(0, curr)
 	} else {
-		deletedIDs = nil
+		deletedIDs = []any{}
 	}
 
 	// inserts remaining
 	for i, m := range inserts {
-		muts[i] = Apply(col.Add(), m)
+		muts[curr+i] = Apply(col.Add(), m)
 	}
 
 	return muts, deletedIDs
