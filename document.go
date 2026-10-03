@@ -177,11 +177,11 @@ func (d Document) Scanners(fields []string) []any {
 			)
 
 			if ft.Kind() == reflect.Ptr {
-				result[index] = Nullable(fv.Addr().Interface())
-			} else {
 				result[index] = fv.Addr().Interface()
+			} else {
+				result[index] = Nullable(fv.Addr().Interface())
 			}
-		} else if split := strings.SplitN(field, ".", 3); len(split) == 2 {
+		} else if split := strings.SplitN(field, ".", 2); len(split) == 2 {
 			if assocRefs == nil {
 				assocRefs = make(map[string]struct {
 					fields  []string
@@ -206,8 +206,8 @@ func (d Document) Scanners(fields []string) []any {
 				assocScanners = assocDoc.Scanners(refs.fields)
 			)
 
-			for _, index := range refs.indexes {
-				result[index] = assocScanners[0]
+			for i, index := range refs.indexes {
+				result[index] = assocScanners[i]
 			}
 		} else {
 			for _, index := range refs.indexes {
